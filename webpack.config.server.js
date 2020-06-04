@@ -5,7 +5,7 @@ const nodeExternals = require('webpack-node-externals')
 config = {
     name: "server",
     entry: [
-        path.join('./server/server.js')
+        path.join(__dirname, 'server/server.js')
     ],
     output: {
         path: path.join(__dirname, 'dist'),

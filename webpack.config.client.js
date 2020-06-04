@@ -2,7 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 
 config = {
-    name: 'browser',
+    name: "browser",
     entry: {
         main: [
             'react-hot-loader/patch',
@@ -15,17 +15,16 @@ config = {
         publicPath: '/dist/',
         filename: 'bundle.js'
     },
-    mode: 'development',
-    target: 'web',
-    devtool: '#source-map',
+    mode: "development",
+    devtool: "#source-map",
+    target: "web",
     module: {
         rules: [
             {
-                enforce: 'pre',
+                enforce: "pre",
                 test: /\.js$/,
-                use: {
-                    loader: "eslint-loader"
-                },
+                exclude: /node_modules/,
+                loader: "eslint-loader",
                 options: {
                     emitWarning: true,
                     failOnError: false,

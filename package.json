@@ -4,6 +4,9 @@
   "description": "An online E-commerce for buying and selling of produce",
   "main": "index.js",
   "scripts": {
+    "development": "webpack --config webpack.config.client.js && nodemon",
+    "build": "webpack --config webpack.config.client.production.js && webpack --mode=production --config webpack.config.server.js",
+    "start": "NODE_ENV=production node ./dist/server.generated.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "./node_modules/.bin/eslint --init",
     "eslint": "eslint"
