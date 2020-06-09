@@ -28,7 +28,9 @@
     "mongoose": "5.9.17",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-hot-loader": "4.12.21"
+    "react-hot-loader": "4.12.21",
+    "swagger-ui-express": "4.1.4",
+    "yamljs": "0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",

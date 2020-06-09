@@ -74,8 +74,7 @@ const remove = (req, res) => {
     user.hashed_password = undefined
     user.salt = undefined
     return res.status(200).json({
-      id: deleteUser._id,
-      message: 'User account deleted on successful',
+      message: `${deleteUser.name} your account has been deleted`,
     })
   })
 }

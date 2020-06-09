@@ -13,9 +13,13 @@ import template from './../template/template'
 import config from './../config/config'
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
+import swaggerRoutes from './routes/swagger.routes'
 
 const app = express()
 const options = {
+  useCreateIndex: true, 
+  useNewUrlParser: true,
+  useFindAndModify: false,
   useUnifiedTopology: true,
 }
 mongoose.connect(config.mongoUri, options).then((conn) => conn).catch(console.error)
@@ -41,6 +45,7 @@ app.use('/dist', express.static(path.join(__dirname, 'dist')))
 
 app.use('/', userRoutes)
 app.use('/', authRoutes)
+app.use('/api/v1', swaggerRoutes)
 
 app.get('/', (req, res) => {
   res.status(200).send(template())
