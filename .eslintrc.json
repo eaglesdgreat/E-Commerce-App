@@ -27,6 +27,14 @@
         "semi": 0,
         "react/jsx-filename-extension": 0,
         "quotes": 0,
-        "react/prefer-stateless-function": 0
+        "react/prefer-stateless-function": 0,
+        "import/no-useless-path-segments": 0,
+        "no-console": 0,
+        "prefer-template": 0,
+        "import/no-extraneous-dependencies": 0,
+        "func-names": 0,
+        "no-underscore-dangle": 0,
+        "no-useless-escape": 0,
+        "object-shorthand": 0
     }
 }

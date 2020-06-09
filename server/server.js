@@ -1,27 +1,62 @@
 import express from 'express'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import helmet from 'helmet'
+import compress from 'compression'
 import path from 'path'
-import {MongoClient} from 'mongodb'
+import mongoose from 'mongoose'
+// import { MongoClient } from 'mongodb'
 
 import devBundle from './devBundle' // comment out for production environment
-import template from '../template/template'
+import template from './../template/template'
+import config from './../config/config'
+import userRoutes from './routes/user.routes'
+import authRoutes from './routes/auth.routes'
 
 const app = express()
-let port = 3080
-const url = process.env.MONGODB_URI || 'mongodb://localhost:27017/onlineMall'
-const options = { useUnifiedTopology: true }
-MongoClient.connect(url, options, (err, db) => {
-    console.log('Connected to mongodb successfully')
-    db.close()
+const options = {
+  useUnifiedTopology: true,
+}
+mongoose.connect(config.mongoUri, options).then((conn) => conn).catch(console.error)
+const db = mongoose.connection
+db.once('open', () => {
+  console.log('Connected to mongodb successfully')
 })
+
+// MongoClient.connect(url, options, (err, db) => {
+//   console.log('Connected to mongodb successfully')
+//   db.close()
+// })
 
 devBundle.compile(app) // comment out for production environment
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(helmet())
+app.use(compress())
+app.use(cors())
 app.use('/dist', express.static(path.join(__dirname, 'dist')))
 
+app.use('/', userRoutes)
+app.use('/', authRoutes)
+
 app.get('/', (req, res) => {
-    res.status(200).send(template())
+  res.status(200).send(template())
 })
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({
+      error: `${err.name}: ${err.message}`
+    })
+  }
+})
+
+app.listen(config.port, (err) => {
+  if (err) {
+    console.log(err)
+  }
+  console.info(`Server running on port ${config.port}`)
 })
