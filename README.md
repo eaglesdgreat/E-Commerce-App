@@ -18,3 +18,5 @@ After initialization of package file we will now set and configure our babel fil
 The webpack configuration is split into 3 part the client has 3 files and server has one and all files is used depending on the environment we are chose to run the app with their own individual settings.
 
 ## Creating the Backend
+After the setup and configuration we developed a fully functionall backend application with Node, Express and Mongoose, In the backend application we were able to set the server.js file for running the full backend application. We created a user's model, api and auth services for the backend application and a swagger documentation for the api. 
+We started by creating the model directory for setting fields needed to be entered by the user then we set a virtual field where we store the password since it is unsecured to store password directly on the database so what we stored directlt on the database is the hashed_password and salt we are encrypted. Then we create our api in the routes directory for our endpoint CRUD operations. We have 3 routes files in the fo

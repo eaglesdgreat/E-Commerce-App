@@ -26,6 +26,13 @@ config = {
                 use: {
                     loader: 'babel-loader'
                 }
+            },
+            {
+                test: /\ya?ml$/,
+                type: 'json',
+                use: {
+                    loader: 'yaml-loader'
+                }
             }
         ]
     }
