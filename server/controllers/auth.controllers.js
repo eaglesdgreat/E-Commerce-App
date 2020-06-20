@@ -8,7 +8,7 @@ const signin = (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err || !user) {
       return res.status(401).json({
-        error: 'User not found',
+        error: 'Invalid Email Address',
       })
     }
 
@@ -44,7 +44,7 @@ const signin = (req, res) => {
   })
 }
 
-// The signout function is optional if cookie is not used in the frontend
+// The signout function is optional if cookie is used in the frontend
 const signout = (req, res) => {
   res.clearCookie('t')
   return res.status(200).json({

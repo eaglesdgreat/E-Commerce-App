@@ -25,8 +25,8 @@
     ],
     "rules": {
         "semi": 0,
-        "react/jsx-filename-extension": 0,
         "quotes": 0,
+        "react/jsx-filename-extension": 0,
         "react/prefer-stateless-function": 0,
         "import/no-useless-path-segments": 0,
         "no-console": 0,
@@ -35,6 +35,12 @@
         "func-names": 0,
         "no-underscore-dangle": 0,
         "no-useless-escape": 0,
-        "object-shorthand": 0
+        "object-shorthand": 0,
+        "arrow-body-style": 0,
+        "react/jsx-boolean-value": 0,
+        "react/prop-types": 0,
+        "react/forbid-prop-types": 0,
+        "react/destructuring-assignment": 0,
+        "react/jsx-props-no-spreading": 0
     }
 }

@@ -1,8 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import HelloWorld from './HelloWorld'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
 
-ReactDOM.render(
-  <HelloWorld />,
+ReactDOM.hydrate(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById("root"),
 )

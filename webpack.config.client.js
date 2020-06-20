@@ -7,7 +7,7 @@ config = {
         main: [
             'react-hot-loader/patch',
             'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-            './client/main.js'
+            './client/Main.js'
         ]
     },
     output: {
@@ -37,17 +37,27 @@ config = {
                 use: {
                     loader: "babel-loader"
                 }
+            },
+            {
+                test: /\.(jpe?g|png|svg|gif|jpg)$/i,
+                use: {
+                    loader: "file-loader?name=client/assets/images/[name].[ext]"
+                }
             }
         ]
     }, 
     resolve: {
         alias: {
             'react-dom': '@hot-loader/react-dom'
-        }
+        },
+        // extensions: ['js', 'jsx']
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin()
+        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.DefinePlugin({
+            __isBrowser__: true
+        })
     ],
     devServer: {
         historyApiFallback: true

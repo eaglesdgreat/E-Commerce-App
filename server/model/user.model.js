@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   salt: String,
+  about: {
+    type: String,
+  },
 })
 
 UserSchema

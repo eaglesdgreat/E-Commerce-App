@@ -33,9 +33,20 @@ config = {
                 use: {
                     loader: 'yaml-loader'
                 }
+            },
+            {
+                test: /\.(jpe?g|png|svg|gif|jpg)$/i,
+                use: {
+                    loader: "file-loader?name=client/assets/images/[name].[ext]"
+                }
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            __isBrowser__: false
+        })
+    ]
 }
 
 module.exports = config
