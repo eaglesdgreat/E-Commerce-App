@@ -1,5 +1,6 @@
 // import serialize from 'serialize-javascript'
-export default ({ markup, data, css }) => {
+
+export default ({ markup, css }) => {
     return `<!DOCTYPE html>
     <html lang="en">
         <head>
@@ -9,13 +10,10 @@ export default ({ markup, data, css }) => {
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,800,900&display=swap">
             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
             <style>a{text-decoration: none}</style>
+            <style id="jss-server-side">${css}</style>
         </head>
         <body style="margin:0">
             <div id="root">${markup}</div>
-            <style id="jss-server-side">${css}</style>
-            <script>
-                window.__INITIAL_STATE__ = ${JSON.stringify(data)}
-            </script>
             <script src="./dist/bundle.js" type="text/javascript"></script>
         </body>
     </html>`

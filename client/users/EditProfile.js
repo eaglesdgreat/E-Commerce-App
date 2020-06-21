@@ -8,6 +8,8 @@ import {
   CardContent,
   CardActions,
   Icon,
+  Switch,
+  FormControlLabel,
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { lime, cyan } from '@material-ui/core/colors'
@@ -16,7 +18,7 @@ import { Redirect } from 'react-router-dom'
 import { Person } from '@material-ui/icons'
 
 import { read, update } from './api.users'
-import { isAuthenticated } from './../auth/auth.helper'
+import { isAuthenticated, updateUser } from './../auth/auth.helper'
 
 const styles = (theme) => ({
   card: {
@@ -54,6 +56,10 @@ const styles = (theme) => ({
     },
   },
   error: { varticalAlign: 'middle' },
+  subheading: {
+    marginTop: `${theme.spacing(2)}`,
+    color: theme.palette.openTitle,
+  },
 })
 
 class EditProfile extends Component {
@@ -72,25 +78,28 @@ class EditProfile extends Component {
       password: '',
       error: '',
       about: '',
+      seller: false,
       redirectToProfile: false,
       userId: '',
     }
     this.handleChange = this.handleChange.bind(this)
     this.clickSubmit = this.clickSubmit.bind(this)
+    this.handleCheck = this.handleCheck.bind(this)
   }
 
   componentDidMount() {
     const { userId } = this.props.match.params
     const jwt = isAuthenticated()
-    read({ userId }, { t: jwt.token }).then((user) => {
-      if (user.error) {
-        this.setState({ error: user.error })
+    read({ userId }, { t: jwt.token }).then((data) => {
+      if (data.error) {
+        this.setState({ error: data.error })
       } else {
         this.setState({
-          name: user.name,
-          email: user.email,
-          about: user.about,
-          userId: user._id,
+          name: data.name,
+          email: data.email,
+          about: data.about,
+          seller: data.seller,
+          userId: data._id,
         })
       }
     })
@@ -105,6 +114,11 @@ class EditProfile extends Component {
     this.setState({ [name]: value })
   }
 
+  handleCheck(event) {
+    const { checked } = event.target
+    this.setState({ seller: checked })
+  }
+
   clickSubmit(e) {
     e.preventDefault()
     const {
@@ -112,6 +126,7 @@ class EditProfile extends Component {
       email,
       about,
       password,
+      seller,
     } = this.state
     const { userId } = this.props.match.params
     this._currentId = userId
@@ -121,12 +136,15 @@ class EditProfile extends Component {
       email,
       about,
       password: password || undefined,
+      seller,
     }
-    update({ userId }, { t: jwt.token }, user).then((user) => {
-      if (user.error) {
-        this.setState({ error: user.error })
+    update({ userId }, { t: jwt.token }, user).then((data) => {
+      if (data.error) {
+        this.setState({ error: data.error })
       } else {
-        this.setState({ redirectToProfile: true })
+        updateUser(data, () => {
+          this.setState({ redirectToProfile: true })
+        })
       }
     })
   }
@@ -140,6 +158,7 @@ class EditProfile extends Component {
       redirectToProfile,
       error,
       userId,
+      seller,
     } = this.state
     const { classes } = this.props
     if (redirectToProfile) {
@@ -168,6 +187,7 @@ class EditProfile extends Component {
                 variant="standard"
                 margin="normal"
               />
+              <br />
               <TextField
                 className={classes.textField}
                 name="email"
@@ -179,6 +199,7 @@ class EditProfile extends Component {
                 variant="standard"
                 margin="none"
               />
+              <br />
               <TextField
                 className={classes.textField}
                 name="about"
@@ -192,6 +213,7 @@ class EditProfile extends Component {
                 variant="standard"
                 margin="normal"
               />
+              <br />
               <TextField
                 className={classes.textField}
                 name="password"
@@ -203,6 +225,20 @@ class EditProfile extends Component {
                 variant="standard"
                 margin="normal"
               />
+              <Typography component="h3" type="subheading" className={classes.subheading}>
+                Activate Seller
+              </Typography>
+              <FormControlLabel
+                control={(
+                  <Switch
+                    classes={{ checked: classes.checked, bar: classes.bar }}
+                    checked={seller}
+                    onChange={this.handleCheck}
+                  />
+                )}
+                label={seller ? 'Active' : 'Inactive'}
+              />
+              <br />
             </form>
             {error && (
               <Typography component="p" color="error">

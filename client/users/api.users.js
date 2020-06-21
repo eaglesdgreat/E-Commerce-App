@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch'
+
 const create = (user) => {
   return fetch('/api/users', {
     method: 'POST',

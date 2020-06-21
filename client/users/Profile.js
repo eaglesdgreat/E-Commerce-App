@@ -43,15 +43,15 @@ const styles = (theme) => ({
 class Profile extends Component {
   constructor(props) {
     super(props)
-    let user
-    if (__isBrowser__) {
-      user = window.__INITIAL_STATE__
-      delete window.__INITIAL_STATE__
-    } else {
-      user = this.props.staticContext.data
-    }
+    // let user
+    // if (__isBrowser__) {
+    //   user = window.__INITIAL_STATE__
+    //   delete window.__INITIAL_STATE__
+    // } else {
+    //   user = this.props.staticContext.data
+    // }
     this.state = {
-      user,
+      usered: '',
       redirecToSignin: false,
       loading: true,
     }
@@ -60,9 +60,7 @@ class Profile extends Component {
 
   componentDidMount() {
     const { userId } = this.props.match.params
-    if (!this.state.user) {
-      this.init(userId)
-    }
+    this.init(userId)
   }
 
   componentDidUpdate(prevProps) {
@@ -83,29 +81,29 @@ class Profile extends Component {
       if (data.error) {
         this.setState({ redirecToSignin: true })
       } else {
-        this.setState({ user: data, loading: false })
+        this.setState({ usered: data, loading: false })
       }
     })
   }
 
   render() {
     const {
-      user,
+      usered,
       redirecToSignin,
       loading,
     } = this.state
     const { classes } = this.props
-    if (loading) {
-      return (<Typography component="p">loading....</Typography>)
-    }
     if (redirecToSignin) {
       return (<Redirect to="/signin" />)
+    }
+    if (loading) {
+      return (<Typography component="p">loading....</Typography>)
     }
     return (
       <div>
         <Paper className={classes.root} elevation={4}>
           <Typography type="headline" component="h1" className={classes.title}>
-            {user.name}
+            {usered.name}
             -Profile
           </Typography>
           <List dense>
@@ -115,21 +113,21 @@ class Profile extends Component {
                   <Person />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={user.name} secondary={user.email} />
-              {isAuthenticated().user && isAuthenticated().user._id === user._id && (
+              <ListItemText primary={usered.name} secondary={usered.email} />
+              {isAuthenticated().user && isAuthenticated().user._id === usered._id && (
                 <ListItemSecondaryAction>
-                  <Link to={`/user/edit/${user._id}`}>
+                  <Link to={`/user/edit/${usered._id}`}>
                     <IconButton className={classes.link}>
                       <Edit />
                     </IconButton>
                   </Link>
-                  <DeleteUser userId={user._id} />
+                  <DeleteUser userId={usered._id} />
                 </ListItemSecondaryAction>
               )}
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={user.about} secondary={`Joined: ${(new Date(user.created).toDateString())}`} />
+              <ListItemText primary={usered.about} secondary={`Joined: ${(new Date(usered.created).toDateString())}`} />
             </ListItem>
           </List>
         </Paper>

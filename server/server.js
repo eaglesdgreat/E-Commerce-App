@@ -9,8 +9,8 @@ import mongoose from 'mongoose'
 import { renderToString } from 'react-dom/server'
 import React from 'react'
 import { StaticRouter, matchPath } from 'react-router-dom'
-import { SheetsRegistry, JssProvider, createGenerateId } from 'react-jss'
-// import { MuiThemeProvider } from '@material-ui/core/styles'
+import { SheetsRegistry, JssProvider } from 'react-jss'
+import { MuiThemeProvider, createGenerateClassName } from '@material-ui/core/styles'
 // import { MongoClient } from 'mongodb'
 
 import devBundle from './devBundle' // comment out for production environment
@@ -19,9 +19,8 @@ import config from './../config/config'
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
 import swaggerRoutes from './routes/swagger.routes'
-import App from './../client/App'
-import SSRRoutes from './../client/routes' // SSR=> means Server Side Rendering
-// import theme from './../styles/theme'
+import MainRoutes from './../client/MainRoutes'
+import theme from './../styles/theme'
 
 const app = express()
 const options = {
@@ -56,35 +55,35 @@ app.use('/', authRoutes)
 app.use('/api/v1', swaggerRoutes)
 
 app.get('*', (req, res) => {
-  const activeRoutes = SSRRoutes.find((route) => {
-    return matchPath(req.url, route)
-  })
-  const promise = activeRoutes.fetchInitialData
-    ? activeRoutes.fetchInitialData(req.url)
-    : Promise.resolve()
+  // const activeRoutes = SSRRoutes.find((route) => {
+  //   return matchPath(req.url, route)
+  // })
+  // const promise = activeRoutes.fetchInitialData
+  //   ? activeRoutes.fetchInitialData(req.url)
+  //   : Promise.resolve()
+
   const sheetsRegistry = new SheetsRegistry()
-  const generateId = createGenerateId()
-  console.log(promise)
+  const generateId = createGenerateClassName()
 
-  promise.then((data) => {
-    console.log(data)
-    const context = {data}
-    const markup = renderToString(
-      <StaticRouter location={req.url} context={context}>
-        <JssProvider registry={sheetsRegistry} generateId={generateId}>
-          {/* <MuiThemeProvider theme={theme}> */}
-          <App />
-          {/* </MuiThemeProvider> */}
-        </JssProvider>
-      </StaticRouter>
-    )
+  // promise.then((data) => {
+  //   console.log(data)
+  const context = {}
+  const markup = renderToString(
+    <StaticRouter location={req.url} context={context}>
+      <JssProvider registry={sheetsRegistry} generateId={generateId}>
+        <MuiThemeProvider theme={theme}>
+          <MainRoutes />
+        </MuiThemeProvider>
+      </JssProvider>
+    </StaticRouter>
+  )
 
-    if (context.url) {
-      return res.redirect(303, context.url)
-    }
-    const css = sheetsRegistry.toString()
-    res.status(200).send(template({ markup, data, css }))
-  }).catch(err => { console.log(err) })
+  if (context.url) {
+    return res.redirect(303, context.url)
+  }
+  const css = sheetsRegistry.toString()
+  res.status(200).send(template({ markup, css }))
+  // }).catch(err => { console.log(err) })
 })
 
 app.use((err, req, res, next) => {

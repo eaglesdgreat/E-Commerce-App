@@ -36,29 +36,27 @@ const styles = (theme) => ({
 class Users extends Component {
   constructor(props) {
     super(props)
-    let users
-    if (__isBrowser__) {
-      users = window.__INITIAL_STATE__
-      delete window.__INITIAL_STATE__
-    } else {
-      users = props.staticContext.data
-    }
+    // let users
+    // if (__isBrowser__) {
+    //   users = window.__INITIAL_STATE__
+    //   delete window.__INITIAL_STATE__
+    // } else {
+    //   users = props.staticContext.data
+    // }
     this.state = {
-      users,
+      users: '',
       loading: true,
     }
   }
 
   componentDidMount() {
-    if (!this.state.users) {
-      list().then((data) => {
-        if (data.error) {
-          console.log(data.error)
-        } else {
-          this.setState(() => ({ users: data, loading: false }))
-        }
-      })
-    }
+    list().then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        this.setState(() => ({ users: data, loading: false }))
+      }
+    })
   }
 
   render() {

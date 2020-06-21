@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { signout } from './api.auth'
 
 // Save credentials on successful sign-in using sessionStorage.setItem
@@ -31,8 +33,22 @@ function logout(next) {
   // signout of cookie below if cookie was your prefer method of authentication
 }
 
+// Used to update the user sessionStorage to check
+// if the user is a seller or not with auth
+function updateUser(user, next) {
+  if (typeof window !== 'undefined') {
+    if (sessionStorage.getItem('jwt')) {
+      const auth = JSON.parse(sessionStorage.getItem('jwt'))
+      _.extend(auth.user, user)
+      sessionStorage.setItem('jwt', JSON.stringify(auth))
+      next()
+    }
+  }
+}
+
 export {
   authenticate,
   isAuthenticated,
   logout,
+  updateUser,
 }

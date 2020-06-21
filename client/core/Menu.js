@@ -8,15 +8,15 @@ import {
   IconButton,
 } from '@material-ui/core'
 import { Home } from '@material-ui/icons'
-import { yellow, pink } from '@material-ui/core/colors/'
+import { teal, pink } from '@material-ui/core/colors/'
 
 import { isAuthenticated, logout } from './../auth/auth.helper'
 
 const isActive = (history, path) => {
   if (history.location.pathname === path) {
-    return { color: yellow['600'] }
+    return { color: teal['600'] }
   }
-  return { color: pink['200'] }
+  return { color: pink['400'] }
 }
 
 const Menu = withRouter(({ history }) => (
@@ -62,6 +62,7 @@ const Menu = withRouter(({ history }) => (
         )}
       </Toolbar>
     </AppBar>
+    <Toolbar />
   </div>
 ))
 
