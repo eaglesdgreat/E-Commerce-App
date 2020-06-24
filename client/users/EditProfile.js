@@ -15,7 +15,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { lime, cyan } from '@material-ui/core/colors'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
-import { Person } from '@material-ui/icons'
+import { Error, Person } from '@material-ui/icons'
 
 import { read, update } from './api.users'
 import { isAuthenticated, updateUser } from './../auth/auth.helper'
@@ -226,7 +226,7 @@ class EditProfile extends Component {
                 margin="normal"
               />
               <Typography component="h3" type="subheading" className={classes.subheading}>
-                Activate Seller
+                Activate Retailer Account
               </Typography>
               <FormControlLabel
                 control={(
@@ -242,7 +242,9 @@ class EditProfile extends Component {
             </form>
             {error && (
               <Typography component="p" color="error">
-                <Icon color="error" className={classes.error} />
+                <Icon color="error" className={classes.error}>
+                  <Error />
+                </Icon>
                 {error}
               </Typography>
             )}

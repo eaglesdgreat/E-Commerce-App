@@ -9,16 +9,19 @@ import Profile from './users/Profile'
 import PrivateRoute from './auth/PrivateRoute'
 import EditProfile from './users/EditProfile'
 import NavBar from './core/Menu'
+import NewShop from './shops/NewShop'
+import MyShops from './shops/MyShops'
 // import { list, read } from './users/api.users'
 
 class MainRoutes extends Component {
   componentDidMount() {
+    // Removes the server-side injected CSS when React component mounts
     const jssStyle = document.getElementById('jss-server-side')
     if (jssStyle && jssStyle.parentNode) {
       jssStyle.parentNode.removeChild(jssStyle)
     }
   }
-  
+
   render() {
     return (
       <div>
@@ -30,6 +33,9 @@ class MainRoutes extends Component {
           <Route path="/signin" component={SignIn} />
           <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
           <Route path="/user/:userId" component={Profile} />
+
+          <PrivateRoute path="/seller/shops/new" component={NewShop} />
+          <Route path="/seller/shops" component={MyShops} />
         </Switch>
       </div>
     )

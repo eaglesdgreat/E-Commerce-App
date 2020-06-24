@@ -33,17 +33,14 @@ function logout(next) {
   // signout of cookie below if cookie was your prefer method of authentication
 }
 
-// Used to update the user sessionStorage to check
-// if the user is a seller or not with auth
+// Used to update the user auth service stored in sessionStorage
+// to check if the user is a seller or not
 function updateUser(user, next) {
-  if (typeof window !== 'undefined') {
-    if (sessionStorage.getItem('jwt')) {
-      const auth = JSON.parse(sessionStorage.getItem('jwt'))
-      _.extend(auth.user, user)
-      sessionStorage.setItem('jwt', JSON.stringify(auth))
-      next()
-    }
-  }
+  const data = { seller: user.seller }
+  const auth = isAuthenticated()
+  auth.user = _.extend(auth.user, data)
+  sessionStorage.setItem('jwt', JSON.stringify(auth))
+  next()
 }
 
 export {

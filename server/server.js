@@ -18,6 +18,7 @@ import template from './../template/template'
 import config from './../config/config'
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
+import shopRoutes from './routes/shop.routes'
 import swaggerRoutes from './routes/swagger.routes'
 import MainRoutes from './../client/MainRoutes'
 import theme from './../styles/theme'
@@ -52,6 +53,7 @@ app.use('/dist', express.static(path.join(__dirname, 'dist')))
 
 app.use('/', userRoutes)
 app.use('/', authRoutes)
+app.use('/', shopRoutes)
 app.use('/api/v1', swaggerRoutes)
 
 app.get('*', (req, res) => {

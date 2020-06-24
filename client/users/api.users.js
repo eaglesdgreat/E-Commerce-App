@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch'
+// import fetch from 'isomorphic-fetch'
 
 const create = (user) => {
   return fetch('/api/users', {
@@ -49,7 +49,7 @@ const update = (params, credentials, user) => {
     },
     body: JSON.stringify(user),
   })
-    .then((res) => res.json)
+    .then((res) => res.json())
     .catch((err) => console.log(err))
 }
 

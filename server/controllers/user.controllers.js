@@ -79,6 +79,16 @@ const remove = (req, res) => {
   })
 }
 
+const isSeller = (req, res, next) => {
+  const seller = req.profile && req.profile.seller
+  if (!seller) {
+    return res.status(403).json({
+      error: 'User not an authorized retailer'
+    })
+  }
+  next()
+}
+
 export default {
   create,
   list,
@@ -86,4 +96,5 @@ export default {
   read,
   update,
   remove,
+  isSeller,
 }

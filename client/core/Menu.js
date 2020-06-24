@@ -19,47 +19,67 @@ const isActive = (history, path) => {
   return { color: pink['400'] }
 }
 
+const isPartActive = (history, path) => {
+  if (history.location.pathname.includes(path)) {
+    return { color: teal['600'] }
+  }
+  return { color: pink['400'] }
+}
+
 const Menu = withRouter(({ history }) => (
   <div>
     <AppBar position="fixed">
       <Toolbar>
-        <Link to="/">
-          <IconButton aria-label="Home" style={isActive(history, '/')}>
-            <Home />
-          </IconButton>
-          Online Market
-        </Link>
-        <Link to="/users">
-          <Button style={isActive(history, '/users')}>
-            Users
-          </Button>
-        </Link>
-        {!isAuthenticated() && (
-          <span>
-            <Link to="/signin">
-              <Button style={isActive(history, '/signin')}>
-                LogIn
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button style={isActive(history, '/signup')}>
-                SignUp
-              </Button>
-            </Link>
-          </span>
-        )}
-        {isAuthenticated() && (
-          <span>
-            <Link to={`/user/${isAuthenticated().user._id}`}>
-              <Button style={isActive(history, `/user/${isAuthenticated().user._id}`)}>
-                Profile
-              </Button>
-            </Link>
-            <Button color="inherit" onClick={() => { logout(() => { history.push('/') }) }}>
-              LogOut
+        <div>
+          <Link to="/">
+            <IconButton aria-label="Home" style={isActive(history, '/')}>
+              <Home />
+            </IconButton>
+            Online Market
+          </Link>
+          <Link to="/users">
+            <Button style={isActive(history, '/users')}>
+              Users
             </Button>
+          </Link>
+        </div>
+        <div style={{ position: 'absolute', right: '10px' }}>
+          <span style={{ float: 'right' }}>
+            {!isAuthenticated() && (
+              <span>
+                <Link to="/signin">
+                  <Button style={isActive(history, '/signin')}>
+                    LogIn
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button style={isActive(history, '/signup')}>
+                    SignUp
+                  </Button>
+                </Link>
+              </span>
+            )}
+            {isAuthenticated() && (
+              <span>
+                {isAuthenticated().user.seller && (
+                  <Link to="/seller/shops">
+                    <Button style={isPartActive(history, '/seller/')}>
+                      MyShops
+                    </Button>
+                  </Link>
+                )}
+                <Link to={`/user/${isAuthenticated().user._id}`}>
+                  <Button style={isActive(history, `/user/${isAuthenticated().user._id}`)}>
+                    Profile
+                  </Button>
+                </Link>
+                <Button color="inherit" onClick={() => { logout(() => { history.push('/') }) }}>
+                  LogOut
+                </Button>
+              </span>
+            )}
           </span>
-        )}
+        </div>
       </Toolbar>
     </AppBar>
     <Toolbar />
