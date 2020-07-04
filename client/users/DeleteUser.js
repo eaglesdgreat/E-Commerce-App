@@ -49,7 +49,6 @@ class DeleteUser extends Component {
   // when the user click the confirm button
   deleteAccount() {
     const jwt = isAuthenticated()
-    // const { userId } = this.props.match.params
     remove({ userId: this.props.userId }, { t: jwt.token }).then((data) => {
       if (data.error) {
         console.log(data.error)
@@ -69,7 +68,7 @@ class DeleteUser extends Component {
       return (<Redirect to="/" />)
     }
     return (
-      <div>
+      <span>
         <IconButton aria-label="Delete" onClick={this.clickButton} className={classes.delet}>
           <Delete />
         </IconButton>
@@ -87,7 +86,7 @@ class DeleteUser extends Component {
             <Button onClick={this.deleteAccount} color="inherit" autoFocus="autoFocus">Confirm</Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </span>
     )
   }
 }

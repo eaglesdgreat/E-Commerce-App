@@ -1,4 +1,8 @@
 import mongoose from 'mongoose'
+import fs from 'fs'
+import path from 'path'
+
+// import Logo from './../../client/assets/images/sponge.jpg'
 
 const ShopSchema = new mongoose.Schema({
   name: {
@@ -12,6 +16,7 @@ const ShopSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String,
+    default: fs.readFile(path.resolve(__dirname, 'dist/client/assets/images/sponge.jpg')),
   },
   owner: {
     type: mongoose.Schema.ObjectId,

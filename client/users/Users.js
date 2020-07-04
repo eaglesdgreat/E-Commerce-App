@@ -20,12 +20,17 @@ import { list } from './api.users'
 
 const styles = (theme) => ({
   root: {
-    padding: `${theme.spacing(2)}px`,
+    maxWidth: 800,
+    padding: `${theme.spacing(10)}px`,
     backgroundColor: yellow['700'],
-    margin: `${theme.spacing(5)}px`,
+    margin: `auto`,
+    marginTop: `${theme.spacing(5)}px`,
+    marginBottom: `${theme.spacing(3)}px`,
   },
   title: {
-    margin: `${theme.spacing(4)}px ${theme.spacing(0)}px ${theme.spacing(2)}px ${theme.spacing(65)}px`,
+    textAlign: 'center',
+    fontSize: '1.2em',
+    margin: `${theme.spacing(1)}px ${theme.spacing(0)}px ${theme.spacing(1)}px ${theme.spacing(7)}px`,
     color: theme.palette.openTitle,
   },
   name: {
@@ -44,7 +49,7 @@ class Users extends Component {
     //   users = props.staticContext.data
     // }
     this.state = {
-      users: '',
+      users: [],
       loading: true,
     }
   }

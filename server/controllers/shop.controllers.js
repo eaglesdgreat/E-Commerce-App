@@ -1,6 +1,6 @@
 import fs from 'fs'
 import formidable from 'formidable'
-import Logo from './../../client/assets/images/sponge.jpg'
+import _ from 'lodash'
 
 import Shop from './../model/shop.model'
 import errorHandler from './../helpers/dbErrorHandler'
@@ -11,21 +11,25 @@ const create = (req, res) => {
   form.parse(req, (err, fields, files) => {
     if (err) {
       return res.status(400).json({
-        message: 'Image not uploaded'
+        message: 'Logo not uploaded',
       })
     }
     const shop = new Shop(fields)
     shop.owner = req.profile
     if (files.logo) {
-      const data = fs.createReadStream(files.logo.path)
-      // fs.copyFileSync(files.logo.path, (__dirname, 'client/assets/shops_images'))
-      shop.imageUrl = (__dirname, `client/assets/shops_images/${files.logo.path}`)
-      console.log(data)
+      fs.writeFileSync('C:/Users/EAGLES/Desktop/MERN_Stack/Online-Market/client/assets/shop_images/', files.logo, (err, next) => {
+        if (err) {
+          console.log(err)
+        }
+        next()
+      })
+      shop.imageUrl = fs.readFileSync(`C:/Users/EAGLES/Desktop/MERN_Stack/Online-Market/client/assets/shop_images/${files.logo.name}`)
+      console.log(files.logo)
     }
     shop.save((err, result) => {
       if (err) {
         return res.status(400).json({
-          error: errorHandler.getErrorMessage(err)
+          error: errorHandler.getErrorMessage(err),
         })
       }
       res.status(200).json(result)
@@ -35,10 +39,11 @@ const create = (req, res) => {
 
 const shopById = (req, res, next, id) => {
   Shop.findById({_id: id})
+    .populate('owner', '_id name')
     .exec((err, shop) => {
-      if (err) {
+      if (err || !shop) {
         return res.status(400).json({
-          error: errorHandler.getErrorMessage(err)
+          error: 'Shop not found',
         })
       }
       req.shop = shop
@@ -50,29 +55,85 @@ const list = (req, res) => {
   Shop.find((err, shops) => {
     if (err) {
       return res.status(400).json({
-        error: errorHandler.getErrorMessage(err)
+        error: errorHandler.getErrorMessage(err),
       })
     }
-    res.status(200).json(shops)
+    return res.status(200).json(shops)
   })
 }
 
-const logo = (req, res, next) => {
-  const pic = req.shop
-  if (pic.imageUrl) {
-    return res.send(pic.imageUrl)
+const listByOwner = (req, res) => {
+  Shop.find({owner: req.profile._id}, (err, shops) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err),
+      })
+    }
+    return res.status(200).json(shops)
+  }).populate('owner', '_id name')
+}
+
+const read = (req, res) => {
+  return res.status(200).json(req.shop)
+}
+
+const isOwner = ( req, res, next) => {
+  const owner = req.shop && req.auth && req.shop.owner._id == req.auth._id
+  if (!owner) {
+    return res.status(400).json({
+      error: 'User not authorized',
+    })
   }
   next()
 }
 
-const defaultLogo = (req, res) => {
-  return res.sendFile(__dirname, Logo)
+const update = (req, res) => {
+  const form = new formidable.IncomingForm()
+  form.keepExtensions= true
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      res.status(400).json({
+        error: 'Logo not uploaded',
+      })
+    }
+    let shop = req.shop
+    shop = _.extend(shop, fields)
+    shop.updated = Date.now()
+    if (files.logo) {
+      shop.imageUrl = `/dist/client/assets/shop_images/${files.logo.name}`
+    }
+    shop.save((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: errorHandler.getErrorMessage(err),
+        })
+      }
+      return res.status(200).json(result)
+    })
+  })
+}
+
+const remove = (req, res,) => {
+  const shop = req.shop
+  shop.remove((err, deleteShop) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err),
+      })
+    }
+    return res.status(200).json({
+      message: `${deleteShop.name} retail store has been deleted`,
+    })
+  })
 }
 
 export default {
   create,
-  logo,
-  defaultLogo,
   shopById,
   list,
+  listByOwner,
+  read,
+  isOwner,
+  update,
+  remove,
 }

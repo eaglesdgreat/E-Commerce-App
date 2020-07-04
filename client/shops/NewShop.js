@@ -19,17 +19,17 @@ import { create } from './api.shops'
 
 const styles = (theme) => ({
   card: {
-    maxWidth: 600,
+    maxWidth: 800,
     margin: 'auto',
     textAlign: 'center',
     marginTop: `${theme.spacing(5)}px`,
     paddingBottom: `${theme.spacing(2)}px`,
-    backgroundColor: lightGreen['200'],
+    backgroundColor: lightGreen['500'],
   },
   title: {
     marginTop: `${theme.spacing(2)}px`,
     color: blueGrey['700'],
-    fontSize: '1em',
+    fontSize: '1.2em',
   },
   input: {
     display: 'none',
@@ -44,7 +44,7 @@ const styles = (theme) => ({
   textField: {
     marginLeft: '8px',
     marginRight: '8px',
-    width: 300,
+    width: 400,
   },
   error: {
     varticalAlign: 'middle',
@@ -113,23 +113,23 @@ class NewShop extends Component {
             Create A New Shop
           </Typography>
           <CardContent>
-            <input
-              accept="image/*"
-              name="logo"
-              type="file"
-              onChange={this.handleChange}
-              id="icon-button-file"
-              className={classes.input}
-            />
-            <label htmlFor="icon-button-file">
-              <Button variant="contained" color="secondary" component="span">
-                Upload Logo
-                <CloudUpload />
-              </Button>
-            </label>
-            <span className={classes.filename}>{logo ? logo.name : ''}</span>
-            <br />
-            <form className={classes.form}>
+            <form className={classes.form} encType="multipart/form-data">
+              <input
+                accept="image/*"
+                name="logo"
+                type="file"
+                onChange={this.handleChange}
+                id="icon-button-file"
+                className={classes.input}
+              />
+              <label htmlFor="icon-button-file">
+                <Button variant="contained" color="secondary" component="span">
+                  Upload Logo
+                  <CloudUpload />
+                </Button>
+              </label>
+              <span className={classes.filename}>{logo ? logo.name : ''}</span>
+              <br />
               <TextField
                 name="name"
                 label="Name"

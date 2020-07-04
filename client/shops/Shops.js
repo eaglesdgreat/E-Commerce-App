@@ -3,29 +3,54 @@ import {
   Paper,
   List,
   ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
   ListItemAvatar,
   Divider,
-  Typography
+  Typography,
+  Avatar,
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import { brown } from '@material-ui/core/colors'
+import { brown, grey } from '@material-ui/core/colors'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { list } from './api.shops'
 
 const styles = (theme) => ({
   root: {
-    backgroundColor: brown['100'],
-    
-  }
+    maxWidth: 800,
+    backgroundColor: brown['600'],
+    padding: `${theme.spacing(2)}px`,
+    margin: 'auto',
+    marginTop: `${theme.spacing(5)}px`,
+    marginBottom: `${theme.spacing(3)}px`,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: '1.2em',
+    margin: `${theme.spacing(3)}px 0px ${theme.spacing(2)}px`,
+    color: theme.palette.protectedTitle,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+  },
+  details: {
+    padding: '24px',
+  },
+  shopTitle: {
+    fontSize: '1.2em',
+    marginBottom: '5px',
+  },
+  subTitle: {
+    color: grey['400'],
+  },
 })
 
 class Shops extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      shops: '',
+      shops: [],
       loading: true,
     }
   }
@@ -52,10 +77,41 @@ class Shops extends Component {
     }
     return (
       <div>
-        <Paper>
-
+        <Paper className={classes.root} elevation={4}>
+          <Typography type="title" component="h1" className={classes.title}>
+            All Available Shops
+          </Typography>
+          <List dense>
+            {shops.map((shop) => {
+              return (
+                <Link to={`/shops/${shop._id}`} key={shop._id}>
+                  <Divider />
+                  <ListItem button={true}>
+                    <ListItemAvatar>
+                      <Avatar className={classes.avatar} src={shop.imageUrl} />
+                    </ListItemAvatar>
+                    <div className={classes.details}>
+                      <Typography type="heading" component="h2" color="primary" className={classes.shopTitle}>
+                        {shop.name}
+                      </Typography>
+                      <Typography type="subheading" compnent="h4" className={classes.subTitle}>
+                        {shop.description}
+                      </Typography>
+                    </div>
+                  </ListItem>
+                  <Divider />
+                </Link>
+              )
+            })}
+          </List>
         </Paper>
       </div>
     )
   }
 }
+
+Shops.propTypes = {
+  classes: PropTypes.object.isRequired,
+}
+
+export default withStyles(styles)(Shops)

@@ -11,6 +11,9 @@ import EditProfile from './users/EditProfile'
 import NavBar from './core/Menu'
 import NewShop from './shops/NewShop'
 import MyShops from './shops/MyShops'
+import Shops from './shops/Shops'
+import Shop from './shops/Shop'
+import EditShop from './shops/EditShop'
 // import { list, read } from './users/api.users'
 
 class MainRoutes extends Component {
@@ -34,8 +37,12 @@ class MainRoutes extends Component {
           <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
           <Route path="/user/:userId" component={Profile} />
 
+          <Route path="/shops/all" component={Shops} />
+          <Route path="/shops/:shopId" component={Shop} />
+
           <PrivateRoute path="/seller/shops/new" component={NewShop} />
-          <Route path="/seller/shops" component={MyShops} />
+          <PrivateRoute path="/seller/shops/edit/:shopId" component={EditShop} />
+          <PrivateRoute path="/seller/shops" component={MyShops} />
         </Switch>
       </div>
     )
