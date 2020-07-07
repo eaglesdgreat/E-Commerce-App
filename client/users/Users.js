@@ -15,8 +15,9 @@ import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom'
 import { Person, ArrowForward } from '@material-ui/icons'
 import { withStyles } from '@material-ui/core/styles'
+import { connect } from 'react-redux'
 
-import { list } from './api.users'
+import userActions from './../actions/user.actions'
 
 const styles = (theme) => ({
   root: {
@@ -39,34 +40,13 @@ const styles = (theme) => ({
 })
 
 class Users extends Component {
-  constructor(props) {
-    super(props)
-    // let users
-    // if (__isBrowser__) {
-    //   users = window.__INITIAL_STATE__
-    //   delete window.__INITIAL_STATE__
-    // } else {
-    //   users = props.staticContext.data
-    // }
-    this.state = {
-      users: [],
-      loading: true,
-    }
-  }
-
   componentDidMount() {
-    list().then((data) => {
-      if (data.error) {
-        console.log(data.error)
-      } else {
-        this.setState(() => ({ users: data, loading: false }))
-      }
-    })
+    this.props.listUsers()
   }
 
   render() {
-    const { classes } = this.props
-    const { users, loading } = this.state
+    const { classes, users, loading } = this.props
+    // const { users, loading } = this.state
     if (loading) {
       return (
         <Typography component="p">
@@ -107,8 +87,20 @@ class Users extends Component {
   }
 }
 
-Users.propTypes = {
-  classes: PropTypes.object.isRequired,
+function mapStateToProps(state) {
+  const { users, loading } = state
+  return { users, loading }
 }
 
-export default withStyles(styles)(Users)
+const actionCreator = {
+  listUsers: userActions.listUsers,
+}
+
+Users.propTypes = {
+  classes: PropTypes.object.isRequired,
+  // users: PropTypes.array.isRequired,
+  // loading: PropTypes.bool.isRequired,
+}
+
+const ReduxUsers = connect(mapStateToProps, actionCreator)(Users)
+export default withStyles(styles)(ReduxUsers)

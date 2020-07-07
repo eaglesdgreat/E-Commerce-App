@@ -119,7 +119,10 @@ class MyShops extends Component {
                 <span key={shop._id}>
                   <ListItem button={true}>
                     <ListItemAvatar>
-                      <Avatar className={classes.avatar} src={shop.imageUrl} />
+                      <Avatar
+                        className={classes.avatar}
+                        src={shop.imageUrl}
+                      />
                     </ListItemAvatar>
                     <ListItemText primary={shop.name} secondary={shop.description} />
                     {isAuthenticated().user && isAuthenticated().user._id === shop.owner._id && (

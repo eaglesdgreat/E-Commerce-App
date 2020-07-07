@@ -1,5 +1,6 @@
 import fs from 'fs'
 import formidable from 'formidable'
+import path from 'path'
 import _ from 'lodash'
 
 import Shop from './../model/shop.model'
@@ -14,18 +15,17 @@ const create = (req, res) => {
         message: 'Logo not uploaded',
       })
     }
+
     const shop = new Shop(fields)
     shop.owner = req.profile
     if (files.logo) {
-      fs.writeFileSync('C:/Users/EAGLES/Desktop/MERN_Stack/Online-Market/client/assets/shop_images/', files.logo, (err, next) => {
-        if (err) {
-          console.log(err)
-        }
-        next()
-      })
-      shop.imageUrl = fs.readFileSync(`C:/Users/EAGLES/Desktop/MERN_Stack/Online-Market/client/assets/shop_images/${files.logo.name}`)
-      console.log(files.logo)
+      const oldPath = files.logo.path
+      const newPath = path.join(__dirname, 'client', 'assets', 'images', files.logo.name)
+      const rawData = fs.readFileSync(oldPath)
+      fs.writeFileSync(newPath, rawData)
+      shop.imageUrl = newPath
     }
+
     shop.save((err, result) => {
       if (err) {
         return res.status(400).json({

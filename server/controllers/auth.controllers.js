@@ -55,9 +55,14 @@ const signout = (req, res) => {
 
 // To check if the incomming request has a
 // valid token in the authorization header, and if the token is valid
-// it appends the verified user ID in an auth key to the request object
+// it appends the verified user ID in an auth key to the request object.
+// The algorithms function changes on the purpose, if you want to use it for session, 
+// you can use HSXXX types. If you want to use it for cross application 
+// authentication(like oauth) etc., you can prefer RSXXX types. 
+// RS types are digital signatures, HS types are not
 const requiredSignIn = expressJwt({
   secret: config.jwtSecret,
+  algorithms: ['HS256'],
   userProperty: 'auth',
 })
 
