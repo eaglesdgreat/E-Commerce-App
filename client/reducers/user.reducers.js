@@ -1,11 +1,12 @@
 import userConstants from './../constants/user.constants'
 
-const initialState = {
+export const initialState = {
   users: [],
   loading: true,
 }
-export default function userReducer(state = initialState, action) {
+export function userReducer(state = initialState, action) {
   switch (action.type) {
+    // All created user reducer
     case userConstants.GET_ALL_REQUEST:
       return { ...state, loading: true }
     case userConstants.GET_ALL_SUCCESS:
@@ -16,3 +17,5 @@ export default function userReducer(state = initialState, action) {
       return state
   }
 }
+
+export default userReducer

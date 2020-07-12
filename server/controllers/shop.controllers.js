@@ -20,10 +20,10 @@ const create = (req, res) => {
     shop.owner = req.profile
     if (files.logo) {
       const oldPath = files.logo.path
-      const newPath = path.join(__dirname, 'client', 'assets', 'images', files.logo.name)
+      const newPath = path.resolve(__dirname, 'images', files.logo.name)
       const rawData = fs.readFileSync(oldPath)
       fs.writeFileSync(newPath, rawData)
-      shop.imageUrl = newPath
+      shop.imageUrl = files.logo.name
     }
 
     shop.save((err, result) => {
@@ -100,7 +100,11 @@ const update = (req, res) => {
     shop = _.extend(shop, fields)
     shop.updated = Date.now()
     if (files.logo) {
-      shop.imageUrl = `/dist/client/assets/shop_images/${files.logo.name}`
+      const oldPath = files.logo.path
+      const newPath = path.resolve(__dirname, 'images', files.logo.name)
+      const rawData = fs.readFileSync(oldPath)
+      fs.writeFileSync(newPath, rawData)
+      shop.imageUrl = files.logo.name
     }
     shop.save((err, result) => {
       if (err) {

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import path from 'path'
+// import path from 'path'
 
-// import Logo from './../../client/assets/images/sponge.jpg'
+// import Logo from './../../dist/images/sponge.jpg'
 
 const ShopSchema = new mongoose.Schema({
   name: {
@@ -11,11 +11,11 @@ const ShopSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
   imageUrl: {
     type: String,
-    default: path.join(__dirname, 'client', 'assests', 'images', 'sponge.jpg'),
+    default: 'sponge.jpg',
     trim: true,
   },
   owner: {

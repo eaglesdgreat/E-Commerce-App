@@ -22,6 +22,7 @@ import { Add, Edit } from '@material-ui/icons'
 import { listByOwner } from './api.shops'
 import { isAuthenticated } from './../auth/auth.helper'
 import DeleteShop from './DeleteShop'
+// import images from './../../dist/images/sponge.jpg'
 
 const styles = (theme) => ({
   root: {
@@ -121,7 +122,7 @@ class MyShops extends Component {
                     <ListItemAvatar>
                       <Avatar
                         className={classes.avatar}
-                        src={shop.imageUrl}
+                        src={`/dist/images/${shop.imageUrl}`}
                       />
                     </ListItemAvatar>
                     <ListItemText primary={shop.name} secondary={shop.description} />

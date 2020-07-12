@@ -95,7 +95,7 @@ class Shop extends Component {
                   {shop.name}
                 </Typography>
                 <br />
-                <Avatar src={shop.imageUrl} className={classes.avatar} />
+                <Avatar src={`./dist/images/${shop.imageUrl}`} className={classes.avatar} />
                 <br />
                 <Typography type="subheading" component="h2" className={classes.subheading}>
                   {shop.description}

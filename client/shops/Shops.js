@@ -88,7 +88,7 @@ class Shops extends Component {
                   <Divider />
                   <ListItem button={true}>
                     <ListItemAvatar>
-                      <Avatar className={classes.avatar} src={shop.imageUrl} />
+                      <Avatar className={classes.avatar} src={`/dist/images/${shop.imageUrl}`} />
                     </ListItemAvatar>
                     <div className={classes.details}>
                       <Typography type="heading" component="h2" color="primary" className={classes.shopTitle}>

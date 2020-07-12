@@ -40,8 +40,8 @@ class MainRoutes extends Component {
           <Route path="/shops/all" component={Shops} />
           <Route path="/shops/:shopId" component={Shop} />
 
-          <PrivateRoute path="/seller/shops/new" component={NewShop} />
           <PrivateRoute path="/seller/shops/edit/:shopId" component={EditShop} />
+          <PrivateRoute path="/seller/shops/new" component={NewShop} />
           <PrivateRoute path="/seller/shops" component={MyShops} />
         </Switch>
       </div>

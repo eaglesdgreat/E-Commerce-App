@@ -37,7 +37,7 @@ config = {
             {
                 test: /\.(jpe?g|png|svg|gif|jpg)$/i,
                 use: {
-                    loader: "file-loader?name=client/assets/images/[name].[ext]"
+                    loader: "file-loader?name=images/[name].[ext]"
                 }
             }
         ]

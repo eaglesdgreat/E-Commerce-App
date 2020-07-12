@@ -16,8 +16,9 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { Redirect, Link } from 'react-router-dom'
 import { amber } from '@material-ui/core/colors'
+import { connect } from 'react-redux'
 
-import { read } from './api.users'
+import userActions from './../actions/user.actions'
 import { isAuthenticated } from './../auth/auth.helper'
 import DeleteUser from './DeleteUser'
 
@@ -35,7 +36,7 @@ const styles = (theme) => ({
     color: theme.palette.protectedTitle,
   },
   link: {
-    marginLeft: `${theme.spacing(5)}px`,
+    marginLeft: `${theme.spacing(20)}px`,
     // marginTop: `${theme.spacing(20)}px`,
   },
 })
@@ -43,18 +44,6 @@ const styles = (theme) => ({
 class Profile extends Component {
   constructor(props) {
     super(props)
-    // let user
-    // if (__isBrowser__) {
-    //   user = window.__INITIAL_STATE__
-    //   delete window.__INITIAL_STATE__
-    // } else {
-    //   user = this.props.staticContext.data
-    // }
-    this.state = {
-      usered: '',
-      redirecToSignin: false,
-      loading: true,
-    }
     this.init = this.init.bind(this)
   }
 
@@ -77,22 +66,16 @@ class Profile extends Component {
   init(userId) {
     this._currentId = userId
     const jwt = isAuthenticated()
-    read({ userId }, { t: jwt.token }).then((data) => {
-      if (data.error) {
-        this.setState({ redirecToSignin: true })
-      } else {
-        this.setState({ usered: data, loading: false })
-      }
-    })
+    this.props.getUser(userId, jwt)
   }
 
   render() {
     const {
-      usered,
+      user,
       redirecToSignin,
       loading,
-    } = this.state
-    const { classes } = this.props
+      classes,
+    } = this.props
     if (redirecToSignin) {
       return (<Redirect to="/signin" />)
     }
@@ -103,7 +86,7 @@ class Profile extends Component {
       <div>
         <Paper className={classes.root} elevation={4}>
           <Typography type="headline" component="h1" className={classes.title}>
-            {usered.name}
+            {user.name}
             -Profile
           </Typography>
           <List dense>
@@ -113,21 +96,21 @@ class Profile extends Component {
                   <Person />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={usered.name} secondary={usered.email} />
-              {isAuthenticated().user && isAuthenticated().user._id === usered._id && (
+              <ListItemText primary={user.name} secondary={user.email} />
+              {isAuthenticated().user && isAuthenticated().user._id === user._id && (
                 <ListItemSecondaryAction>
-                  <Link to={`/user/edit/${usered._id}`}>
+                  <Link to={`/user/edit/${user._id}`}>
                     <IconButton className={classes.link}>
                       <Edit />
                     </IconButton>
                   </Link>
-                  <DeleteUser userId={usered._id} />
+                  <DeleteUser userId={user._id} />
                 </ListItemSecondaryAction>
               )}
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={usered.about} secondary={`Joined: ${(new Date(usered.created).toDateString())}`} />
+              <ListItemText primary={user.about} secondary={`Joined: ${(new Date(user.created).toDateString())}`} />
             </ListItem>
           </List>
         </Paper>
@@ -136,8 +119,19 @@ class Profile extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  const { user, loading, redirecToSignin } = state.oneUser
+  return { user, loading, redirecToSignin }
+}
+
+const actionCreator = {
+  getUser: userActions.getUser,
+}
+
 Profile.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(Profile)
+const ReduxProfile = connect(mapStateToProps, actionCreator)(Profile)
+
+export default withStyles(styles)(ReduxProfile)

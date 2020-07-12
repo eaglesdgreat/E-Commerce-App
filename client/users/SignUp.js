@@ -19,8 +19,9 @@ import { withStyles } from '@material-ui/core/styles'
 import { yellow, cyan } from '@material-ui/core/colors'
 import { Link } from 'react-router-dom'
 import { Error, Cancel } from '@material-ui/icons'
+import { connect } from 'react-redux'
 
-import { create } from './api.users'
+import userActions from './../actions/user.actions'
 
 const styles = (theme) => ({
   card: {
@@ -64,8 +65,6 @@ class SignUp extends Component {
       name: '',
       email: '',
       password: '',
-      open: false,
-      error: '',
     }
     this.handleChange = this.handleChange.bind(this)
     this.clickSubmit = this.clickSubmit.bind(this)
@@ -77,13 +76,12 @@ class SignUp extends Component {
       name: '',
       email: '',
       password: '',
-      open: false,
-      error: '',
     })
+    this.props.beforeReg(null)
   }
 
   handleRequestClose() {
-    this.setState({ open: false })
+    this.props.beforeReg(false)
   }
 
   handleChange(event) {
@@ -91,20 +89,15 @@ class SignUp extends Component {
     this.setState({ [name]: value })
   }
 
-  clickSubmit() {
+  clickSubmit(e) {
+    e.preventDefault()
     const { name, email, password } = this.state
     const user = {
       name: name || undefined,
       email: email || undefined,
       password: password,
     }
-    create(user).then((data) => {
-      if (data.error) {
-        this.setState({ error: data.error })
-      } else {
-        this.setState({ error: '', open: true })
-      }
-    })
+    this.props.registration(user)
   }
 
   render() {
@@ -112,10 +105,12 @@ class SignUp extends Component {
       name,
       email,
       password,
+    } = this.state
+    const {
+      classes,
       error,
       open,
-    } = this.state
-    const { classes } = this.props
+    } = this.props
     return (
       <div>
         <Card className={classes.card}>
@@ -207,8 +202,20 @@ class SignUp extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  const { error, open } = state.signUp
+  return { error, open }
+}
+
+const actionCreator = {
+  registration: userActions.registration,
+  beforeReg: userActions.beforeReg,
+}
+
 SignUp.propsTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(SignUp)
+const ReduxSignup = connect(mapStateToProps, actionCreator)(SignUp)
+
+export default withStyles(styles)(ReduxSignup)

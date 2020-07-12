@@ -5,18 +5,22 @@ import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 
-import userReducer from './reducers/user.reducers'
 import App from './App'
+import { rootReducer, initialState } from './reducers'
 
 const method = ReactDOM.render ? ReactDOM.render : ReactDOM.hydrate
 
 const loggerMiddleware = createLogger()
 const store = createStore(
-  userReducer,
+  rootReducer,
+  initialState,
   applyMiddleware(
     thunkMiddleware,
     loggerMiddleware,
   ),
+  // (
+  //   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  // ),
 )
 
 method(

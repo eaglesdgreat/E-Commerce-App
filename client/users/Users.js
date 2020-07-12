@@ -88,7 +88,7 @@ class Users extends Component {
 }
 
 function mapStateToProps(state) {
-  const { users, loading } = state
+  const { users, loading } = state.listUsers
   return { users, loading }
 }
 
@@ -98,9 +98,8 @@ const actionCreator = {
 
 Users.propTypes = {
   classes: PropTypes.object.isRequired,
-  // users: PropTypes.array.isRequired,
-  // loading: PropTypes.bool.isRequired,
 }
 
 const ReduxUsers = connect(mapStateToProps, actionCreator)(Users)
+
 export default withStyles(styles)(ReduxUsers)

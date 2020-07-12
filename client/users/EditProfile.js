@@ -16,9 +16,10 @@ import { lime, cyan } from '@material-ui/core/colors'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
 import { Error, Person } from '@material-ui/icons'
+import { connect } from 'react-redux'
 
-import { read, update } from './api.users'
-import { isAuthenticated, updateUser } from './../auth/auth.helper'
+import userActions from './../actions/user.actions'
+import { isAuthenticated } from './../auth/auth.helper'
 
 const styles = (theme) => ({
   card: {
@@ -32,7 +33,7 @@ const styles = (theme) => ({
   title: {
     color: theme.palette.protectedTitle,
     marginTop: `${theme.spacing(2)}px`,
-    marginLeft: `${theme.spacing(20)}px`,
+    marginLeft: `${theme.spacing(5)}px`,
   },
   bigAvatar: {
     width: 60,
@@ -76,11 +77,8 @@ class EditProfile extends Component {
       name: '',
       email: '',
       password: '',
-      error: '',
+      seller: '',
       about: '',
-      seller: false,
-      redirectToProfile: false,
-      userId: '',
     }
     this.handleChange = this.handleChange.bind(this)
     this.clickSubmit = this.clickSubmit.bind(this)
@@ -90,18 +88,12 @@ class EditProfile extends Component {
   componentDidMount() {
     const { userId } = this.props.match.params
     const jwt = isAuthenticated()
-    read({ userId }, { t: jwt.token }).then((data) => {
-      if (data.error) {
-        this.setState({ error: data.error })
-      } else {
-        this.setState({
-          name: data.name,
-          email: data.email,
-          about: data.about,
-          seller: data.seller,
-          userId: data._id,
-        })
-      }
+    this.props.updatedUser(userId, jwt, null)
+    this.setState({
+      name: this.props.user.name,
+      email: this.props.user.email,
+      seller: this.props.user.seller,
+      about: this.props.user.about,
     })
   }
 
@@ -115,8 +107,8 @@ class EditProfile extends Component {
   }
 
   handleCheck(event) {
-    const { checked } = event.target
-    this.setState({ seller: checked })
+    const { checked, name } = event.target
+    this.setState({ [name]: checked })
   }
 
   clickSubmit(e) {
@@ -138,31 +130,25 @@ class EditProfile extends Component {
       password: password || undefined,
       seller,
     }
-    update({ userId }, { t: jwt.token }, user).then((data) => {
-      if (data.error) {
-        this.setState({ error: data.error })
-      } else {
-        updateUser(data, () => {
-          this.setState({ redirectToProfile: true })
-        })
-      }
-    })
+    this.props.updatedUser(userId, jwt, user)
   }
 
   render() {
     const {
       name,
       email,
-      password,
       about,
-      redirectToProfile,
-      error,
-      userId,
+      password,
       seller,
     } = this.state
-    const { classes } = this.props
+    const {
+      classes,
+      user,
+      redirectToProfile,
+      error,
+    } = this.props
     if (redirectToProfile) {
-      return (<Redirect to={`/user/${userId}`} />)
+      return (<Redirect to={`/user/${user._id}`} />)
     }
     return (
       <div>
@@ -231,6 +217,7 @@ class EditProfile extends Component {
               <FormControlLabel
                 control={(
                   <Switch
+                    name="seller"
                     classes={{ checked: classes.checked, bar: classes.bar }}
                     checked={seller}
                     onChange={this.handleCheck}
@@ -260,8 +247,19 @@ class EditProfile extends Component {
   }
 }
 
+function mapStateToprops(state) {
+  const { user, error, redirectToProfile } = state.updatesUser
+  return { user, error, redirectToProfile }
+}
+
+const actionCreator = {
+  updatedUser: userActions.updatedUser,
+}
+
 EditProfile.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(EditProfile)
+const ReduxEditProfile = connect(mapStateToprops, actionCreator)(EditProfile)
+
+export default withStyles(styles)(ReduxEditProfile)
