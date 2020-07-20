@@ -15,7 +15,7 @@ const signin = (req, res) => {
     // To verify the password from the request body using
     // the authenticate method in the model UserSchema
     if (!user.authenticate(req.body.password)) {
-      return res.status(401).send({
+      return res.status(401).json({
         error: 'Email and Password do not match',
       })
     }
